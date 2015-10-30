@@ -1,8 +1,9 @@
 package ir.s3000.demodictionary;
 
 import android.content.Context;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,7 +18,7 @@ import it.gmariotti.cardslib.library.internal.CardHeader;
 import it.gmariotti.cardslib.library.view.CardViewNative;
 
 
-public class Search extends ActionBarActivity {
+public class Search extends AppCompatActivity {
     ListView mList;
     private TextWatcher tw;
     @Override
@@ -38,6 +39,8 @@ public class Search extends ActionBarActivity {
         CardViewNative cardView = (CardViewNative) findViewById(R.id.carddemo);
         cardView.setCard(card);
 
+
+
     }
 
 
@@ -53,7 +56,7 @@ public class Search extends ActionBarActivity {
             if (view!=null){
                 TextView t1 = (TextView) view.findViewById(R.id.textViewCard);
 
-                final EditText t2 = (EditText) view.findViewById(R.id.editTextCard);
+                final AppCompatEditText t2 = (AppCompatEditText) view.findViewById(R.id.editTextCard);
                  tw = new TextWatcher() {
 
                     public void afterTextChanged(Editable s) {
@@ -72,7 +75,7 @@ public class Search extends ActionBarActivity {
 
                     }
                 };
-                    t2.addTextChangedListener(tw);
+                   // t2.addTextChangedListener(tw);
 
 
             }

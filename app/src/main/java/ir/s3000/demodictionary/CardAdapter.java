@@ -1,7 +1,6 @@
 package ir.s3000.demodictionary;
 
 import android.content.Context;
-import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,16 +14,14 @@ import it.gmariotti.cardslib.library.view.CardViewNative;
 /**
  * Created by S3000 on 10/29/2015.
  */
-public class CardAdapter extends ArrayAdapter<String> {
+public class CardAdapter extends ArrayAdapter<Word> {
         private final Context context;
-        private final String[] values;
-        private final String[] deffs;
+        private final Word[] values;
 
-        public CardAdapter (Context context, String[] values,String[] deffs) {
+        public CardAdapter (Context context, Word[] values) {
             super(context,-1,values);
             this.context = context;
             this.values = values;
-            this.deffs=deffs;
         }
 
         @Override
@@ -34,9 +31,9 @@ public class CardAdapter extends ArrayAdapter<String> {
             View rowView = inflater.inflate(R.layout.list_layout, parent, false);
             //Create a Card
             TextView deff=(TextView) convertView.findViewById(R.id.list_card_body_text);
-                deff.setText(deffs[position]);
+                deff.setText(values[position].getDeff());
             TextView tit = (TextView) convertView.findViewById(R.id.list_card_header_text);
-                tit.setText(values[position]);
+                tit.setText(values[position].getWord());
             Card card = new Card(getContext(),R.layout.list_card_body);
 
             //Create a CardHeader

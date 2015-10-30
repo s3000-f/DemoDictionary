@@ -33,12 +33,12 @@ public class DictDataSource {
             dbHelper.close();
         }
 
-        public Word createComment(String word) {
+        public Word createWord(Word word) {
             ContentValues values = new ContentValues();
             ContentValues values2 = new ContentValues();
 
-            values.put(WordDatabase.COLUMN_WORD, word);
-            values2.put(WordDatabase.COLUMN_DEFF,word);
+            values.put(WordDatabase.COLUMN_WORD, word.getWord());
+            values2.put(WordDatabase.COLUMN_DEFF,word.getDeff());
             long insertId = database.insert(WordDatabase.TABLE_DICT, null,
                     values);
             Cursor cursor = database.query(WordDatabase.TABLE_DICT,
@@ -50,14 +50,14 @@ public class DictDataSource {
             return newWord;
         }
 
-        public void deleteComment(Word word) {
+        public void deleteWord(Word word) {
             long id = word.getId();
             System.out.println("Comment deleted with id: " + id);
             database.delete(WordDatabase.TABLE_DICT, WordDatabase.COLUMN_ID
                     + " = " + id, null);
         }
 
-        public List<Word> getAllComments() {
+        public List<Word> getAllWords() {
             List<Word> words = new ArrayList<Word>();
 
             Cursor cursor = database.query(WordDatabase.TABLE_DICT,
@@ -81,5 +81,5 @@ public class DictDataSource {
             word.setDeff(cursor.getString(2));
             return word;
         }
-    }
+
 }
