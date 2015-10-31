@@ -47,17 +47,17 @@ public class Search extends AppCompatActivity {
                 "ir.s3000.demodictionary", Context.MODE_PRIVATE);
         boolean flag = prefs.getBoolean("firstLaunch", true);
         if (flag) {
-            BackgroundTask task = new BackgroundTask(Search.this, getApplicationContext(),1,null);
+            BackgroundTask task = new BackgroundTask(Search.this, getApplicationContext(),true,null);
             task.execute();
             prefs.edit().putBoolean("firstLaunch",false);
         }
         DictDataSource dictDataSource=new DictDataSource(getApplicationContext());
         List<Word> words=dictDataSource.getAllWords();
         final Word[] word=words.toArray(new Word[words.size()]);
-        BackgroundTask task = new BackgroundTask(Search.this, getApplicationContext(),2,word);
+        BackgroundTask task = new BackgroundTask(Search.this, getApplicationContext(),false,word);
         task.execute();
 
-        if (!mList.equals(null))
+        if (!(mList==null))
         {
             mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -116,9 +116,9 @@ public class Search extends AppCompatActivity {
     private class BackgroundTask extends AsyncTask<Void, Void, Void> {
         private ProgressDialog dialog;
         private Context context;
-        private int type;
+        private boolean type;
         private Word[] word;
-        public BackgroundTask(Search activity,Context context,int type,Word[] word) {
+        public BackgroundTask(Search activity,Context context,boolean type,Word[] word) {
             dialog = new ProgressDialog(activity);
             this.context=context;
             this.type=type;
@@ -128,7 +128,7 @@ public class Search extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             dialog.setTitle("First Launch");
-            if (type==1)
+            if (type)
             dialog.setMessage("Deploying Databases, please wait.");
             else dialog.setMessage("Getting Data");
             dialog.show();
@@ -143,7 +143,7 @@ public class Search extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
-            if (type==1){
+            if (type){
                 WordToDB wtdb=new WordToDB(context);
 
                 wtdb.start();
