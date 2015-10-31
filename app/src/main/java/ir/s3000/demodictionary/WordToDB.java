@@ -10,7 +10,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 
 /**
  * Created by S3000 on 10/30/2015.
@@ -36,6 +35,7 @@ public class WordToDB {
             e.printStackTrace();
         }
     }
+
 
     private byte[] fullyReadFileToBytes() throws IOException {
         File file=getFile();

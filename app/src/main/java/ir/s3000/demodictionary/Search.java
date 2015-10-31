@@ -1,7 +1,9 @@
 package ir.s3000.demodictionary;
 
+import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,9 +14,12 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.List;
 
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardHeader;
@@ -42,11 +47,28 @@ public class Search extends AppCompatActivity {
                 "ir.s3000.demodictionary", Context.MODE_PRIVATE);
         boolean flag = prefs.getBoolean("firstLaunch", true);
         if (flag) {
-            BackgroundTask task = new BackgroundTask(Search.this, getApplicationContext());
+            BackgroundTask task = new BackgroundTask(Search.this, getApplicationContext(),1,null);
             task.execute();
             prefs.edit().putBoolean("firstLaunch",false);
         }
+        DictDataSource dictDataSource=new DictDataSource(getApplicationContext());
+        List<Word> words=dictDataSource.getAllWords();
+        final Word[] word=words.toArray(new Word[words.size()]);
+        BackgroundTask task = new BackgroundTask(Search.this, getApplicationContext(),2,word);
+        task.execute();
 
+        if (!mList.equals(null))
+        {
+            mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Intent i=new Intent(getApplicationContext(),WordView.class);
+                    i.putExtra("wordToDisplay",word[position].getWord());
+                    i.putExtra("deffToDisplay",word[position].getDeff());
+                    startActivity(i);
+                }
+            });
+        }
 
 
 
@@ -94,15 +116,21 @@ public class Search extends AppCompatActivity {
     private class BackgroundTask extends AsyncTask<Void, Void, Void> {
         private ProgressDialog dialog;
         private Context context;
-        public BackgroundTask(Search activity,Context context) {
+        private int type;
+        private Word[] word;
+        public BackgroundTask(Search activity,Context context,int type,Word[] word) {
             dialog = new ProgressDialog(activity);
             this.context=context;
+            this.type=type;
+            this.word=word;
         }
 
         @Override
         protected void onPreExecute() {
             dialog.setTitle("First Launch");
+            if (type==1)
             dialog.setMessage("Deploying Databases, please wait.");
+            else dialog.setMessage("Getting Data");
             dialog.show();
         }
 
@@ -115,10 +143,16 @@ public class Search extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
+            if (type==1){
+                WordToDB wtdb=new WordToDB(context);
 
-            WordToDB wtdb=new WordToDB(context);
+                wtdb.start();
 
-            wtdb.start();
+            }else
+            {
+                CardAdapter cardAdapter=new CardAdapter(context,word);
+                mList.setAdapter(cardAdapter);
+            }
 
             return null;
         }
