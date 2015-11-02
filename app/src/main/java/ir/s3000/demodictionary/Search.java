@@ -12,6 +12,7 @@ import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -49,10 +50,12 @@ public class Search extends AppCompatActivity {
         if (flag) {
             BackgroundTask task = new BackgroundTask(Search.this, getApplicationContext(),true,null);
             task.execute();
-            prefs.edit().putBoolean("firstLaunch",false);
+            //prefs.edit().putBoolean("firstLaunch", false);
         }
         DictDataSource dictDataSource=new DictDataSource(getApplicationContext());
+        dictDataSource.open();
         List<Word> words=dictDataSource.getAllWords();
+        dictDataSource.close();
         final Word[] word=words.toArray(new Word[words.size()]);
         BackgroundTask task = new BackgroundTask(Search.this, getApplicationContext(),false,word);
         task.execute();
@@ -143,13 +146,16 @@ public class Search extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
+            Log.e("kk","kk");
             if (type){
+                Log.e("kk","kk2");
                 WordToDB wtdb=new WordToDB(context);
 
                 wtdb.start();
 
             }else
             {
+                Log.e("kk","kk3");
                 CardAdapter cardAdapter=new CardAdapter(context,word);
                 mList.setAdapter(cardAdapter);
             }

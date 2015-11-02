@@ -60,8 +60,7 @@ public class DictDataSource {
         public List<Word> getAllWords() {
             List<Word> words = new ArrayList<Word>();
 
-            Cursor cursor = database.query(WordDatabase.TABLE_DICT,
-                    allColumns, null, null, null, null, null);
+            Cursor cursor = database.rawQuery("SELECT * FROM dictionary", allColumns);
 
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {

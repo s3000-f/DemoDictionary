@@ -27,10 +27,12 @@ public class WordToDB {
             byte[] gzipData = fullyReadFileToBytes();
             Decompress decompress=new Decompress(gzipData);
             DictDataSource dictDataSource=new DictDataSource(context);
+            dictDataSource.open();
             for(int i=0;i<decompress.mWord.length;i++)
             {
                 dictDataSource.createWord(decompress.mWord[i]);
             }
+            dictDataSource.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
