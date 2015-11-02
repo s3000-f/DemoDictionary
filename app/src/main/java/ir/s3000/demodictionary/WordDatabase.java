@@ -32,18 +32,8 @@ public class WordDatabase extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase database) {
-        try {
-            database = context.openOrCreateDatabase(DATABASE_NAME, );
-        } catch (FileNotFoundException e) {
-            try {
-                database =
-                        context.createDatabase(DATABASE_NAME, DATABASE_VERSION, 0,
-                                null);
-                database.execSQL(DATABASE_CREATE);
-            } catch (FileNotFoundException e1) {
-                database = null;
-            }
-        }
+
+        database = context.openOrCreateDatabase(DATABASE_NAME, Context.MODE_PRIVATE,null);
         database.execSQL(DATABASE_CREATE);
     }
 
