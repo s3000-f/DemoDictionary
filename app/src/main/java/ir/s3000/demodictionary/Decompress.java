@@ -1,5 +1,7 @@
 package ir.s3000.demodictionary;
 
+import android.util.Log;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.zip.GZIPInputStream;
@@ -31,7 +33,9 @@ public class Decompress {
         Word[] word = new Word[s1.length];
         for(int i=0;i<s1.length;i++)
         {
-            String[] s2=s1[i].split("$%^");
+            String[] s2=s1[i].split("@@@");
+            //String[] s3=s2[0].split("$%^");
+            word[i]=new Word();
             word[i].setWord(s2[0]);
             word[i].setDeff(s2[1]);
 

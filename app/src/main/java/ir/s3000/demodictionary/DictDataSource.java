@@ -8,6 +8,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 /**
  * Created by S3000 on 10/30/2015.
@@ -23,10 +24,13 @@ public class DictDataSource {
 
         public DictDataSource(Context context) {
             dbHelper = new WordDatabase(context);
+            Log.e("kk","ddd    "+ dbHelper);
         }
 
         public void open() throws SQLException {
+
             database = dbHelper.getWritableDatabase();
+            Log.e("kk","ddd    "+database);
         }
 
         public void close() {
@@ -34,17 +38,25 @@ public class DictDataSource {
         }
 
         public Word createWord(Word word) {
+            Log.e("kk","dads   ");
             ContentValues values = new ContentValues();
+            Log.e("kk","ddddds   ");
             ContentValues values2 = new ContentValues();
+            Log.e("kk","dds   ");
 
             values.put(WordDatabase.COLUMN_WORD, word.getWord());
-            values2.put(WordDatabase.COLUMN_DEFF,word.getDeff());
+            Log.e("kk", "dds2   ");
+            values2.put(WordDatabase.COLUMN_DEFF, word.getDeff());
+            Log.e("kk", "dds 2  ");
             long insertId = database.insert(WordDatabase.TABLE_DICT, null,
                     values);
+            Log.e("kk","dds  3 ");
             Cursor cursor = database.query(WordDatabase.TABLE_DICT,
                     allColumns, WordDatabase.COLUMN_ID + " = " + insertId, null,
                     null, null, null);
+            Log.e("kk","dds 4  ");
             cursor.moveToFirst();
+            Log.e("kk", "dds  33 ");
             Word newWord = cursorToWord(cursor);
             cursor.close();
             return newWord;

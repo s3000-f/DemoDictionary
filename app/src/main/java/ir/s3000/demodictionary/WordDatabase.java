@@ -33,8 +33,10 @@ public class WordDatabase extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase database) {
 
-        database = context.openOrCreateDatabase(DATABASE_NAME, Context.MODE_PRIVATE,null);
+        //database = context.openOrCreateDatabase(DATABASE_NAME, Context.MODE_PRIVATE,null);
+        Log.e("kk","data     "+database);
         database.execSQL(DATABASE_CREATE);
+        Log.e("kk","data     "+database);
     }
 
     @Override
@@ -46,4 +48,5 @@ public class WordDatabase extends SQLiteOpenHelper {
 
         onCreate(db);
     }
+
 }

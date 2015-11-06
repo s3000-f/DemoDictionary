@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +18,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -30,13 +31,20 @@ import it.gmariotti.cardslib.library.view.CardViewNative;
 public class Search extends AppCompatActivity {
     ListView mList;
     private TextWatcher tw;
+    DictDataSource dictDataSource;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
-
+        DictDataSource dictDataSource=new DictDataSource(getApplicationContext());
+        try {
+            dictDataSource.open();
+        }catch (SQLException e)
+        {
+            Log.e("kk","    "+e);
+        }
         Card card = new Card(getApplicationContext(),R.layout.carddemo_example_inner_header);
         CustomHeaderInnerCard header = new CustomHeaderInnerCard(getApplicationContext());        //header.setTitle("Search");
         card.addCardHeader(header);
@@ -48,16 +56,15 @@ public class Search extends AppCompatActivity {
                 "ir.s3000.demodictionary", Context.MODE_PRIVATE);
         boolean flag = prefs.getBoolean("firstLaunch", true);
         if (flag) {
-            BackgroundTask task = new BackgroundTask(Search.this, getApplicationContext(),true,null);
+            BackgroundTask task = new BackgroundTask(Search.this, getApplicationContext(),true,null,dictDataSource);
             task.execute();
             //prefs.edit().putBoolean("firstLaunch", false);
         }
-        DictDataSource dictDataSource=new DictDataSource(getApplicationContext());
-        dictDataSource.open();
+
         List<Word> words=dictDataSource.getAllWords();
         dictDataSource.close();
         final Word[] word=words.toArray(new Word[words.size()]);
-        BackgroundTask task = new BackgroundTask(Search.this, getApplicationContext(),false,word);
+        BackgroundTask task = new BackgroundTask(Search.this, getApplicationContext(),false,word,null);
         task.execute();
 
         if (!(mList==null))
@@ -121,7 +128,7 @@ public class Search extends AppCompatActivity {
         private Context context;
         private boolean type;
         private Word[] word;
-        public BackgroundTask(Search activity,Context context,boolean type,Word[] word) {
+        public BackgroundTask(Search activity,Context context,boolean type,Word[] word,DictDataSource dictDataSource) {
             dialog = new ProgressDialog(activity);
             this.context=context;
             this.type=type;
@@ -149,10 +156,11 @@ public class Search extends AppCompatActivity {
             Log.e("kk","kk");
             if (type){
                 Log.e("kk","kk2");
-                WordToDB wtdb=new WordToDB(context);
+                WordToDB wtdb=new WordToDB(context,dictDataSource);
 
+                Log.e("kk","kk22     "+dictDataSource+" -- // -- ");
                 wtdb.start();
-
+                Log.e("kk", "kk3");
             }else
             {
                 Log.e("kk","kk3");

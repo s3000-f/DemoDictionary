@@ -1,6 +1,8 @@
 package ir.s3000.demodictionary;
 
 import android.content.Context;
+import android.database.SQLException;
+import android.util.Log;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -16,23 +18,27 @@ import java.io.InputStream;
  */
 public class WordToDB {
     Context context;
+    DictDataSource dictDataSource;
 
-    public WordToDB(Context context)
+    public WordToDB(Context context,DictDataSource dictDataSource)
     {
         this.context=context;
+        this.dictDataSource=dictDataSource;
     }
     public void start()
     {
         try {
             byte[] gzipData = fullyReadFileToBytes();
             Decompress decompress=new Decompress(gzipData);
-            DictDataSource dictDataSource=new DictDataSource(context);
-            dictDataSource.open();
+
+
+            Log.e("kk", "kkaaaaaaaa3    "+ decompress.mWord.length);
             for(int i=0;i<decompress.mWord.length;i++)
             {
+                Log.e("kk","inja   ");
                 dictDataSource.createWord(decompress.mWord[i]);
             }
-            dictDataSource.close();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -61,6 +67,7 @@ public class WordToDB {
     {
         File file = new File(context.getFilesDir() + File.separator + "DefaultProperties.xml");
         try {
+
             InputStream inputStream = context.getResources().openRawResource(R.raw.db);
             FileOutputStream fileOutputStream = new FileOutputStream(file);
 

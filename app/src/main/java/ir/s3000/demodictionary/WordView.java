@@ -25,6 +25,7 @@ public class WordView extends AppCompatActivity {
         Card cardWord = new Card(getApplicationContext(),R.layout.card_view_word_body);
         AppCompatTextView text=(AppCompatTextView)findViewById(R.id.card_view_word_header_text);
         text.setText(word.getDeff());
+
         CustomHeaderInnerCard headerWord = new CustomHeaderInnerCard(getApplicationContext());        //header.setTitle("Search");
         cardWord.addCardHeader(headerWord);
         CardViewNative cardViewWord = (CardViewNative) findViewById(R.id.card_view_word);

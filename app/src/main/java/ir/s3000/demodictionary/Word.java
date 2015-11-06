@@ -1,5 +1,7 @@
 package ir.s3000.demodictionary;
 
+import android.util.Log;
+
 /**
  * Created by S3000 on 10/30/2015.
  */
@@ -21,14 +23,15 @@ public class Word {
     }
 
     public void setWord(String word) {
+        Log.e("kk","fucl");
         this.word = word;
     }
     public String getDeff() {
-        return word;
+        return deff;
     }
 
-    public void setDeff(String word) {
-        this.word = word;
+    public void setDeff(String deff) {
+        this.deff = deff;
     }
 
 }
