@@ -32,11 +32,13 @@ public class WordToDB {
             Decompress decompress=new Decompress(gzipData);
 
 
-            Log.e("kk", "kkaaaaaaaa3    "+ decompress.mWord.length);
-            for(int i=0;i<decompress.mWord.length;i++)
+            for(int j=0;j<decompress.mWord.length;j++)
             {
-                Log.e("kk","inja   ");
-                dictDataSource.createWord(decompress.mWord[i]);
+
+
+                    dictDataSource.createWord(decompress.mWord[j]);
+
+
             }
 
         } catch (IOException e) {

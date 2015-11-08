@@ -23,7 +23,6 @@ public class Word {
     }
 
     public void setWord(String word) {
-        Log.e("kk","fucl");
         this.word = word;
     }
     public String getDeff() {

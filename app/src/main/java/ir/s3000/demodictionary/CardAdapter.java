@@ -1,6 +1,7 @@
 package ir.s3000.demodictionary;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,32 +30,36 @@ public class CardAdapter extends ArrayAdapter<Word> {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View rowView = inflater.inflate(R.layout.list_layout, parent, false);
+            View rowBody = inflater.inflate(R.layout.list_card_body, null);
             //Create a Card
-            TextView deff=(TextView) convertView.findViewById(R.id.list_card_body_text);
+            TextView deff=(TextView) rowBody.findViewById(R.id.list_card_body_text);
                 deff.setText(values[position].getDeff());
-            TextView tit = (TextView) convertView.findViewById(R.id.list_card_header_text);
-                tit.setText(values[position].getWord());
+            //TextView tit = (TextView) rowHeader.findViewById(R.id.list_card_header_text);
+              //  tit.setText(values[position].getWord());
+
+
             Card card = new Card(getContext(),R.layout.list_card_body);
-
             //Create a CardHeader
-            CustomHeaderInnerCard header = new CustomHeaderInnerCard(getContext());
+            CustomHeaderInnerCard header = new CustomHeaderInnerCard(getContext(),values[position]);
             //Add header to card
-            CardViewNative cardView = (CardViewNative) convertView.findViewById(R.id.cardList);
             card.addCardHeader(header);
-
+            CardViewNative cardView = (CardViewNative) rowView.findViewById(R.id.cardList);
+            cardView.setCard(card);
 
             return rowView;
         }
     public class CustomHeaderInnerCard extends CardHeader {
-
-        public CustomHeaderInnerCard(Context context) {
+        private Word value;
+        public CustomHeaderInnerCard(Context context,Word word) {
             super(context, R.layout.list_card_header);
+            this.value=word;
         }
 
         @Override
         public void setupInnerViewElements(ViewGroup parent, View view ) {
 
-
+            TextView tit = (TextView) view.findViewById(R.id.list_card_header_text);
+            tit.setText(value.getWord());
 
 
 

@@ -24,42 +24,35 @@ public class DictDataSource {
 
         public DictDataSource(Context context) {
             dbHelper = new WordDatabase(context);
-            Log.e("kk","ddd    "+ dbHelper);
         }
 
         public void open() throws SQLException {
 
             database = dbHelper.getWritableDatabase();
-            Log.e("kk","ddd    "+database);
         }
 
         public void close() {
             dbHelper.close();
         }
 
-        public Word createWord(Word word) {
-            Log.e("kk","dads   ");
+        public void createWord(Word word) {
+
             ContentValues values = new ContentValues();
-            Log.e("kk","ddddds   ");
-            ContentValues values2 = new ContentValues();
-            Log.e("kk","dds   ");
 
             values.put(WordDatabase.COLUMN_WORD, word.getWord());
-            Log.e("kk", "dds2   ");
-            values2.put(WordDatabase.COLUMN_DEFF, word.getDeff());
-            Log.e("kk", "dds 2  ");
+            values.put(WordDatabase.COLUMN_DEFF, word.getDeff());
+
             long insertId = database.insert(WordDatabase.TABLE_DICT, null,
                     values);
-            Log.e("kk","dds  3 ");
+            /*
             Cursor cursor = database.query(WordDatabase.TABLE_DICT,
                     allColumns, WordDatabase.COLUMN_ID + " = " + insertId, null,
                     null, null, null);
-            Log.e("kk","dds 4  ");
             cursor.moveToFirst();
-            Log.e("kk", "dds  33 ");
+
             Word newWord = cursorToWord(cursor);
             cursor.close();
-            return newWord;
+            return newWord; */
         }
 
         public void deleteWord(Word word) {
@@ -72,7 +65,8 @@ public class DictDataSource {
         public List<Word> getAllWords() {
             List<Word> words = new ArrayList<Word>();
 
-            Cursor cursor = database.rawQuery("SELECT * FROM dictionary", allColumns);
+            Cursor cursor = database.query(WordDatabase.TABLE_DICT,
+                    allColumns, null, null, null, null, null);
 
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {

@@ -39,12 +39,9 @@ public class Search extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
         setSupportActionBar(toolbar);
         DictDataSource dictDataSource=new DictDataSource(getApplicationContext());
-        try {
+
             dictDataSource.open();
-        }catch (SQLException e)
-        {
-            Log.e("kk","    "+e);
-        }
+
         Card card = new Card(getApplicationContext(),R.layout.carddemo_example_inner_header);
         CustomHeaderInnerCard header = new CustomHeaderInnerCard(getApplicationContext());        //header.setTitle("Search");
         card.addCardHeader(header);
@@ -56,16 +53,18 @@ public class Search extends AppCompatActivity {
                 "ir.s3000.demodictionary", Context.MODE_PRIVATE);
         boolean flag = prefs.getBoolean("firstLaunch", true);
         if (flag) {
-            BackgroundTask task = new BackgroundTask(Search.this, getApplicationContext(),true,null,dictDataSource);
+            BackgroundTask task = new BackgroundTask(Search.this, getApplicationContext(),true,null,dictDataSource,null);
             task.execute();
-            //prefs.edit().putBoolean("firstLaunch", false);
+            prefs.edit().putBoolean("firstLaunch", false).apply();
         }
 
         List<Word> words=dictDataSource.getAllWords();
-        dictDataSource.close();
+
         final Word[] word=words.toArray(new Word[words.size()]);
-        BackgroundTask task = new BackgroundTask(Search.this, getApplicationContext(),false,word,null);
+        mList=(ListView)findViewById(R.id.listView1);
+        BackgroundTask task = new BackgroundTask(Search.this, getApplicationContext(),false,word,null,mList);
         task.execute();
+        dictDataSource.close();
 
         if (!(mList==null))
         {
@@ -128,11 +127,15 @@ public class Search extends AppCompatActivity {
         private Context context;
         private boolean type;
         private Word[] word;
-        public BackgroundTask(Search activity,Context context,boolean type,Word[] word,DictDataSource dictDataSource) {
+        private DictDataSource dictDataSource;
+        private ListView mList;
+        public BackgroundTask(Search activity,Context context,boolean type,Word[] word,DictDataSource dictDataSource,ListView mList) {
             dialog = new ProgressDialog(activity);
             this.context=context;
             this.type=type;
             this.word=word;
+            this.dictDataSource=dictDataSource;
+            this.mList=mList;
         }
 
         @Override
@@ -153,19 +156,22 @@ public class Search extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
-            Log.e("kk","kk");
             if (type){
-                Log.e("kk","kk2");
                 WordToDB wtdb=new WordToDB(context,dictDataSource);
 
-                Log.e("kk","kk22     "+dictDataSource+" -- // -- ");
                 wtdb.start();
-                Log.e("kk", "kk3");
             }else
             {
                 Log.e("kk","kk3");
                 CardAdapter cardAdapter=new CardAdapter(context,word);
-                mList.setAdapter(cardAdapter);
+                Log.e("kk","kk4   "+mList);
+                try {
+                    mList.setAdapter(cardAdapter);
+                    Log.e("kk", "kk5");
+                }catch (Exception e)
+                {
+                    Log.e("kk", "kk5     "+e);
+                }
             }
 
             return null;

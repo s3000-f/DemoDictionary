@@ -34,9 +34,7 @@ public class WordDatabase extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase database) {
 
         //database = context.openOrCreateDatabase(DATABASE_NAME, Context.MODE_PRIVATE,null);
-        Log.e("kk","data     "+database);
         database.execSQL(DATABASE_CREATE);
-        Log.e("kk","data     "+database);
     }
 
     @Override
